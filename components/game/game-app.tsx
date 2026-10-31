@@ -1,5 +1,6 @@
 'use client'
 
+import { ChapterScreen } from './chapter/chapter-screen'
 import { GameProvider, useGame } from './game-provider'
 import { BottomNav, TopBar } from './navigation'
 import { StarField } from './star-field'
@@ -17,6 +18,8 @@ function CurrentScreen() {
       return <MissionMap />
     case 'shop':
       return <ShopScreen />
+    case 'chapter':
+      return <ChapterScreen />
     default:
       return <HomeScreen />
   }

@@ -1,4 +1,4 @@
-export type Screen = 'home' | 'creator' | 'missions' | 'shop'
+export type Screen = 'home' | 'creator' | 'missions' | 'shop' | 'chapter'
 
 export type SuitId = 'white' | 'teal' | 'orange' | 'navy' | 'gold' | 'violet'
 export type HelmetId = 'classic' | 'visor' | 'explorer' | 'retro'

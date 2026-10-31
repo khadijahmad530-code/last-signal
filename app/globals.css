@@ -40,6 +40,23 @@
   --animate-signal: signal 2.4s ease-out infinite;
   --animate-fade-up: fade-up 0.6s ease-out both;
   --animate-float: float 6s ease-in-out infinite;
+  --animate-slide-in: slide-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+  --animate-badge-pop: badge-pop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-burst: burst 1.4s ease-out 0.5s both;
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(32px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes badge-pop {
+    0% { opacity: 0; transform: scale(0.2) rotate(-25deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  @keyframes burst {
+    0% { opacity: 0.9; transform: scale(0.4); }
+    100% { opacity: 0; transform: scale(2.2); }
+  }
 
   @keyframes twinkle {
     0%, 100% { opacity: 0.2; }

@@ -176,14 +176,9 @@ function MapMarker({
 }
 
 function ChapterCard({ chapter, status }: { chapter: Chapter; status: Status }) {
-  const { completeChapter } = useGame()
-  const [justPlayed, setJustPlayed] = useState(false)
+  const { startChapter } = useGame()
   const requirement = CHAPTERS.find((c) => c.id === chapter.requires)
-
-  const begin = () => {
-    completeChapter(chapter.id)
-    setJustPlayed(true)
-  }
+  const begin = () => startChapter(chapter.id)
 
   return (
     <article
@@ -239,13 +234,6 @@ function ChapterCard({ chapter, status }: { chapter: Chapter; status: Status }) 
         </div>
       </dl>
 
-      {justPlayed && (
-        <p className="mt-6 rounded-2xl border border-gold/40 bg-gold/10 p-4 text-base text-gold">
-          Signal received. You earned the {chapter.name} Memory Badge and {chapter.reward} points.
-          <span className="block text-muted-foreground">(Chapter gameplay coming soon.)</span>
-        </p>
-      )}
-
       <div className="mt-6">
         {status === 'locked' ? (
           <Button disabled className="h-14 w-full rounded-full text-lg font-bold">
@@ -254,6 +242,7 @@ function ChapterCard({ chapter, status }: { chapter: Chapter; status: Status }) 
           </Button>
         ) : status === 'completed' ? (
           <Button
+            onClick={begin}
             variant="outline"
             className="h-14 w-full rounded-full border-gold/50 bg-transparent text-lg font-bold text-gold hover:bg-gold/10 hover:text-gold"
           >

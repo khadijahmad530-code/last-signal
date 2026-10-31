@@ -91,6 +91,8 @@ export function TopBar() {
 export function BottomNav() {
   const { screen, navigate } = useGame()
 
+  if (screen === 'chapter') return null
+
   return (
     <nav
       aria-label="Main"

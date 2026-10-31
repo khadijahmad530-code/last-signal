@@ -28,9 +28,11 @@ interface GameState {
   equippedSticker: string | null
   equippedTheme: string | null
   isConfirmed: boolean
+  activeChapter: ChapterId | null
 }
 
 interface GameContextValue extends GameState {
+  startChapter: (id: ChapterId) => void
   navigate: (screen: Screen) => void
   confirmAstronaut: (name: string, avatar: AvatarConfig) => void
   isOwned: (key: string) => boolean
@@ -38,7 +40,8 @@ interface GameContextValue extends GameState {
   buyItem: (item: ShopItem) => boolean
   equipItem: (item: ShopItem) => void
   isEquipped: (item: ShopItem) => boolean
-  completeChapter: (id: ChapterId) => void
+  /** Awards the earned points, plus the chapter reward the first time it is completed. */
+  completeChapter: (id: ChapterId, earned?: number) => void
   chapterStatus: (id: ChapterId) => 'completed' | 'available' | 'locked'
 }
 
@@ -60,6 +63,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     equippedSticker: 'sticker-wheels',
     equippedTheme: 'theme-aurora',
     isConfirmed: false,
+    activeChapter: null,
   })
   const [owned, setOwned] = useState<Set<string>>(
     () => new Set(['item:sticker-wheels', 'item:theme-aurora']),
@@ -132,13 +136,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     [state.completed],
   )
 
-  const completeChapter = useCallback((id: ChapterId) => {
+  const startChapter = useCallback((id: ChapterId) => {
+    setState((s) => ({ ...s, activeChapter: id, screen: 'chapter' }))
+    window.scrollTo({ top: 0 })
+  }, [])
+
+  const completeChapter = useCallback((id: ChapterId, earned = 0) => {
     const chapter = CHAPTERS.find((c) => c.id === id)
-    setState((s) =>
-      s.completed.includes(id)
-        ? s
-        : { ...s, completed: [...s.completed, id], points: s.points + (chapter?.reward ?? 0) },
-    )
+    setState((s) => {
+      const firstTime = !s.completed.includes(id)
+      return {
+        ...s,
+        completed: firstTime ? [...s.completed, id] : s.completed,
+        points: s.points + earned + (firstTime ? (chapter?.reward ?? 0) : 0),
+      }
+    })
   }, [])
 
   const value = useMemo<GameContextValue>(
@@ -151,10 +163,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       buyItem,
       equipItem,
       isEquipped,
+      startChapter,
       completeChapter,
       chapterStatus,
     }),
     [
+      startChapter,
       state,
       navigate,
       confirmAstronaut,
